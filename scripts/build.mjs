@@ -4,6 +4,7 @@ import path from 'node:path';
 import { Marked } from 'marked';
 import { parse } from 'yaml';
 import config from '../site.config.js';
+import { galleryTools } from './galleries.mjs';
 
 export const root = fileURLToPath(new URL('../', import.meta.url));
 export const output = path.join(root, 'dist');
@@ -88,9 +89,16 @@ export async function build() {
     if (route !== '/404.html') pages.push({ route, modified: post?.date ?? config.project.updated });
   }
 
+  const galleries = galleryTools(base);
+  await mkdir(path.join(output, 'assets/flipbooks'), { recursive: true });
+  for (const animation of galleries.media.animations) {
+    await writeFile(path.join(output, `assets/flipbooks/${animation.id}.json`), JSON.stringify(animation));
+  }
+
   const home = interpolate(await readFile(path.join(root, 'src/index.html'), 'utf8'), {
     ...common, focus: escape(config.project.focus), stage: escape(config.project.stage), updated: date(config.project.updated, 'short'),
     metrics: config.project.metrics.map(metric => `<div class="metric"><strong>${escape(metric.value)}</strong><span>${escape(metric.label)}</span><small>${escape(metric.detail)}</small></div>`).join(''),
+    featuredExamples: galleries.featured,
     latestEntries: posts.slice(0, 3).map(entryRow).join(''),
   });
   await page('/', '', config.description, home);
@@ -119,6 +127,8 @@ export async function build() {
       <div class="prose article-body">${body}</div><footer class="article-footer"><p>Part of the EG / MegaJam 2026 development journal.</p><a href="${config.githubUrl}/blob/main/${post.filename}">Read this entry on GitHub ↗</a></footer>
     </article><section class="shell related-entries" aria-labelledby="more-heading"><div class="section-heading"><h2 id="more-heading">More from the notebook</h2><a href="${link('/journal/')}">All entries ↗</a></div>${posts.filter(item => item.path !== post.path).slice(0, 2).map(entryRow).join('')}</section>`, post);
   }
+
+  for (const item of galleries.pages) await page(item.route, item.title, item.description, item.body);
 
   await page('/404.html', 'Page not found', 'Find your way back to the development journal.', `<div class="shell page-shell"><div class="page-heading"><p class="eyebrow">A missing page / 404</p><h1>Back to the notebook<span class="accent">.</span></h1><p class="page-intro">That page could not be found. There is more to explore in the journal.</p><a class="button" href="${link('/journal/')}">Open the journal ↗</a></div></div>`);
 

@@ -1,42 +1,24 @@
 ---
-title: A fantasy RTS, in progress
-eyebrow: The project
-description: "Our MegaJam 2026 development project brings a high fantasy roster, squad combat, and settlement progression into Unreal Engine."
+title: The idea behind the process
+eyebrow: Our starting point
+description: "A high fantasy RTS became the brief for a connected research, planning, image generation, modeling, and animation workflow."
 ---
 
-## The idea
+## A shared game, three visual identities
 
-Build a strategy game around readable armies, distinct fantasy factions, and a battlefield where routes and settlements matter. Humans, Elves, and Goblins share tactical roles while expressing them through different characters, mounts, equipment, and architecture.
+Our starting idea was a strategy game with Human, Elf, and Goblin factions. Shared class roles give us a common gameplay vocabulary; character descriptions, equipment, architecture, and effects give each faction a distinct appearance.
 
-The roster covers nine combat archetypes—Melee, Ranged, Tank, Cavalry, Grenadier, Assassin, Scout, Healer, and Magic—plus Workers. Both male and female variants are represented across the three factions.
+Research established nine combat archetypes—Melee, Ranged, Tank, Cavalry, Grenadier, Assassin, Scout, Healer, and Magic—plus Workers. Every humanoid role has male and female variants. Mounts and the Human scout's falcon have separate animal references.
 
-Pinewatch Vale is the working name of the first woodland battlefield. The planned skirmish pairs a Human player with an Elf AI. The saved map is a foundation for that match; full runtime integration is still ahead.
+## The development process is the story
 
-## Current state
+This journal follows how that idea became research, how the research became instructions for AI, and how the resulting visual library fed Tripo modeling and Unreal animation work. Our three leading examples are the Elf assassin, Elf female mage, and Human male mage.
 
-Snapshot: **15 November 2026.** “Implemented” here describes saved technical work. The entries below identify review and integration still needed.
+- [Read the complete process]({{base}}/process/).
+- [See the concept sprite sheets]({{base}}/sprite-sheets/).
+- [Explore the Tripo inputs and recording]({{base}}/tripo/).
+- [Inspect the generated pose sheets and HTML flipbooks]({{base}}/animations/).
 
-{{workstreams}}
+## What the artwork shows
 
-## Pinewatch Vale
-
-The authored layout uses a 400 × 400 metre envelope with two home bases, two guarded neutral settlements, a central road, and two woodland routes. Home sites reserve room for later building tiers.
-
-<figure class="article-figure">
-  <a href="{{base}}/assets/images/pinewatch-vale-overhead.svg"><img src="{{base}}/assets/images/pinewatch-vale-overhead.svg" alt="Pinewatch Vale design diagram showing home bases, routes, building sites, and candidate resource locations." width="1600" height="1300" loading="lazy"></a>
-  <figcaption>Authored layout diagram, 15 November 2026. This is a design reference, not a gameplay capture or a measurement of navigation. Cache symbols mark candidate locations. <a href="{{base}}/assets/images/pinewatch-vale-overhead.svg">Open at full size ↗</a></figcaption>
-</figure>
-
-## The next questions
-
-- Do squad movement and class interactions feel clear and responsive in play?
-- Do the characters, equipment, animations, and building states read at gameplay distance?
-- Can the map, economy, production, vision, and opponent come together as a coherent 1v1 loop?
-
-These are development goals, rather than announced release features or dates.
-
-## About this repository
-
-This is the public development journal and its website source. The Unreal project is maintained separately. Posts summarize selected development work without requiring access to the game repository or its working files.
-
-[Follow the journal]({{base}}/journal/) or [browse the public repository]({{githubUrl}}).
+The roster sheets show the initial visual direction. The four-view images show the model-generation inputs. The action sheets and browser players show the choreography and timing references used for skeletal animation work. Captions distinguish each stage so readers can follow the handoff from one to the next.

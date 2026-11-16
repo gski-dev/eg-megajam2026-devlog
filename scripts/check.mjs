@@ -28,7 +28,7 @@ let links = 0;
 for (const [filename, { html }] of documents) {
   const relative = path.relative(output, filename).split(path.sep).join('/');
   const pageUrl = new URL(`${base}/${relative.replace(/index\.html$/, '')}`, config.url);
-  for (const match of html.matchAll(/\b(?:href|src)="([^"]+)"/g)) {
+  for (const match of html.matchAll(/\b(?:href|src|poster|data-source)="([^"]+)"/g)) {
     const url = new URL(match[1].replaceAll('&amp;', '&'), pageUrl);
     if (url.origin !== origin) continue;
     assert(url.pathname.startsWith(`${base}/`), `${relative}: link escapes project path: ${url.pathname}`);
@@ -53,3 +53,19 @@ for (const name of ['package.json', 'site.config.js', 'README.md', 'content', 's
   assert(!files.some(file => path.relative(output, file).split(path.sep)[0] === name), `Source should not be deployed: ${name}`);
 }
 console.log(`Checked ${documents.size} HTML pages and ${links} internal links/assets; metadata, anchors, feed, and sitemap passed.`);
+
+const media = JSON.parse(await readFile(new URL('../content/media.json', import.meta.url), 'utf8'));
+for (const animation of media.animations) {
+  for (const sheet of animation.sheets) {
+    const [width, height] = media.imageSizes[sheet.image];
+    const [columns, rows] = sheet.grid;
+    assert(width % columns === 0 && height % rows === 0, `${animation.id}: uniform image cells`);
+    for (const frame of sheet.keyframes) {
+      assert(Number.isInteger(frame.cell) && frame.cell >= 0 && frame.cell < columns * rows, `${animation.id}: valid cell`);
+      assert(Number.isFinite(frame.time_seconds) && frame.time_seconds >= 0, `${animation.id}: valid timestamp`);
+    }
+    await stat(path.join(output, sheet.image));
+  }
+}
+for (const reference of media.references) assert.deepEqual(Object.keys(reference.views), ['front', 'left', 'back', 'right'], `${reference.id}: complete four-view set`);
+console.log(`Checked ${media.animations.length} flipbook packages and ${media.references.length} complete four-view reference sets.`);

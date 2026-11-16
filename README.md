@@ -1,59 +1,42 @@
-# EG / MegaJam 2026 — Development journal
+# EG / MegaJam 2026 — Development process
 
-A public overview of the process behind our high fantasy RTS in Unreal Engine: design decisions, asset preparation, animation, squad combat, building states, and the battlefield taking shape.
+[Visit the devlog](https://gski-dev.github.io/eg-megajam2026-devlog/).
 
-**[Read the devlog](https://gski-dev.github.io/eg-megajam2026-devlog/)** · [Journal entries](content/posts) · [How to contribute](CONTRIBUTING.md)
+The site documents our AI-assisted workflow: idea → research → production plans → imagegen sprite sheets → four-view references → Tripo models → action sheets and HTML flipbooks → Unreal skeletal animation.
 
-This repository contains the website and curated development notes. The Unreal project is maintained separately.
+The leading examples are the Elf assassin, Elf female mage, and Human male mage. The Tripo section includes our supplied workflow recording. The original editorial content has been replaced; the existing HTML/CSS template and GitHub Pages deployment remain.
 
-## Stack
+## Run and check
 
-HTML, CSS, and JavaScript. A small Node.js script generates static HTML from HTML templates and Markdown content. Its only build dependencies are `marked` and `yaml`. The browser uses plain JavaScript for journal search; all pages and links work with JavaScript disabled.
-
-GitHub Pages hosts the output. Pushes to `main` build, check, and deploy automatically through GitHub Actions. Pull requests build and check without deploying. GitHub Pages is [free for public repositories on GitHub Free](https://docs.github.com/en/pages/quickstart); the default `github.io` address needs no paid domain or hosting plan.
-
-## Run locally
-
-Use Node.js 22 or newer.
+Use Node.js 22 or newer:
 
 ```sh
 npm ci
 npm run dev
-```
-
-Open **http://127.0.0.1:4173/eg-megajam2026-devlog/**. The preview builds the site when it starts; restart after changing source files.
-
-```sh
 npm run build
 npm run check
 ```
 
-The build writes `dist/`. Checks verify generated pages, internal links, anchors, image descriptions, page metadata, and required publishing artifacts. To test root hosting, use the same base setting for both commands:
+Local preview: http://127.0.0.1:4173/eg-megajam2026-devlog/
+
+`content/` contains the notes and curated image catalog. `src/` contains the HTML templates. `scripts/galleries.mjs` assembles the galleries and case studies; `public/` contains browser code and media. The HTML galleries, artwork, and navigation work without JavaScript. JavaScript adds search and flipbook playback.
+
+## Media
+
+`content/media-provenance.json` records project-relative source filenames and hashes. Four-view references are resized web copies. Action sheets are full-resolution lossless WebP copies with transparency retained. The published timing JSON contains only the fields needed for playback. Local paths, prompts, logs, source models, and engine assets are not deployed.
+
+Normal builds use committed media and require no Unreal project or Python installation. To explicitly refresh the selected media library, use Python with Pillow:
 
 ```sh
-BASE_PATH= npm run build
-BASE_PATH= npm run check
+python scripts/export-process-assets.py /path/to/assets/drafts/high-fantasy
 ```
 
-## Update the site
+The exporter selects complete four-view sets from the active character, building, and equipment directories, the 12 faction concept sheets, and available sheets in the attack-flipbook catalog. It excludes archived revisions and engine data. Review the resulting diff before publishing.
 
-- **Add a journal entry:** copy [the post template](templates/post.md) into `content/posts/YYYY-MM-DD-short-title.md`. Fill in the metadata and content.
-- **Update the overview:** edit [src/index.html](src/index.html).
-- **Update the process or project page:** edit [content/pages](content/pages).
-- **Update project status and navigation:** edit [site.config.js](site.config.js).
-- **Add reviewed images:** place web-sized files under `public/assets/images/` and include a descriptive caption.
-- **Change the layout or styles:** edit [src/layout.html](src/layout.html) and [public/assets/css/site.css](public/assets/css/site.css).
-
-Post dates must include a time-zone offset. Drafts (`draft: true`) and future-dated entries are omitted from the build. A future entry appears on the next build after its date; publishing is not scheduled automatically. GitHub Actions can also be run manually.
+The supplied Tripo recording is distributed as a web MP4 with a poster. The animation previews show generated visual references; they do not claim to be final Unreal renders. Research and production descriptions are curated from the project’s faction roster, generation plans, Tripo workflow, retargeting pilot, and animation production records.
 
 ## Deployment
 
-In the repository's **Settings → Pages**, the publishing source is **GitHub Actions**. The workflow uploads only `dist/`, then deploys it to the `github-pages` environment. No API keys, paid plugins, backend, or external hosting account are required.
+Pushes to `main` build, check, and deploy `dist/` through GitHub Actions. Pull requests build and check without deploying. `site.config.js` controls the project URL and base path. For root hosting, use `BASE_PATH=` consistently for both build and check.
 
-The project path is configured in `site.config.js`. Change `url` and `basePath` together if the repository or domain changes. Asset URLs, navigation, canonical links, the Atom feed, and the sitemap use that configuration.
-
-## Initial editorial sources
-
-The initial summaries were written from the development project's existing handoffs dated 14–15 November 2026: unit animation production, RTS squad combat sandbox, faction building state sandbox, and Pinewatch Vale implementation. Reported checks describe those records, rather than new gameplay validation performed for this website. The Pinewatch diagram is the authored layout reference from that project and is labeled accordingly.
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for the journal's writing format and publishing scope. Public availability does not grant a license to redistribute game art or third-party assets; their original terms still apply.
+The site uses HTML, CSS, JavaScript, `marked`, and `yaml`. Public availability does not assign a license to game artwork or third-party assets.
